@@ -1,0 +1,455 @@
+package view;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.font.TextAttribute;
+import java.net.URL;
+import java.text.AttributedString;
+import java.util.ArrayList;
+import java.awt.ComponentOrientation;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+import Model.card.Card;
+
+
+/**
+ * Class View that has all the graphics of the game.
+ * @author George Leventopoulos
+ *  
+ */
+@SuppressWarnings("serial")
+public class View extends JFrame {
+	//Fields of class view.
+	private JFrame frame; //The frame
+	private JLayeredPane back;  // For all of the backround.
+	
+	//For right side.
+	private JMenuBar menu; //The menu 
+	private JButton foldButton;  
+	private JButton Card1, Card2; //Receive card image , Current Card image
+	private JTextField infobox; // Information box.
+	private JLabel ReceiveCard, CurrentCard; // Labels for description for receive card and current card.
+	
+	//For left side.
+	private JLabel logo; //Sorry logo.
+	private JLabel redHome, yellowHome;  //Labels for homes.
+	private JLabel redStart, yellowStart;  //Labels for starts.
+	private JLabel backround; // Sets the backround.
+	private JButton[] pawns = new JButton[4]; //Array for pawns.
+	private JLabel txt1; //text in red home
+	private JLabel txt2; // text in yellow home
+	private JLabel txt3; //text in red start
+	private JLabel txt4; //text in yellow start
+	private JLabel txt5; //text in info
+	/** 
+	 * Constructor for class view that creates every snapshot we need in the game.
+	 */
+	public View() {
+		frame = new JFrame("Sorry Game");
+		menu = new JMenuBar();
+		
+		//Right Side
+		Card1 = new JButton();
+		Card2 =  new JButton();
+		foldButton = new JButton();
+		infobox = new JTextField();
+		ReceiveCard = new JLabel();
+		CurrentCard = new JLabel();
+		
+		//Left Side
+		pawns[0] = new JButton(); //red pawn0
+		pawns[1] = new JButton(); //red pawn1
+		pawns[2] = new JButton(); //yellow pawn0
+		pawns[3] = new JButton(); //yellow pawn1
+		redHome = new JLabel();
+		yellowHome = new JLabel();
+		redStart = new JLabel();
+		yellowStart = new JLabel();
+		backround = new JLabel();
+		logo = new JLabel();
+		
+		txt1 = new JLabel();
+		txt2 = new JLabel();
+		txt3 = new JLabel();
+		txt4 = new JLabel();
+		txt5 = new JLabel();
+		back = new JLayeredPane();
+		resizeImages();
+		initComponents(); 
+		initButtons();
+	}
+	
+	/**
+	 * intialize all the components.
+	 */
+	private void initComponents() { 
+		frame.setSize(new Dimension(850, 800));
+		frame.setVisible(true); 
+		
+		back.setBounds(0,0,850,800);
+		
+		backround.setIcon(new ImageIcon("images/background.png"));
+		backround.setOpaque(true);
+		backround.setBounds(0, 0, 850, 800);
+		back.add(backround,0);
+		frame.add(back);
+		
+		frame.setJMenuBar(menu);
+		
+		JMenu newGame = new JMenu("New Game");
+		menu.add(newGame);
+		
+		JMenu saveGame = new JMenu("Save Game");
+		menu.add(saveGame);
+		
+		JMenu con = new JMenu("Continue");
+		menu.add(con);
+		
+		JMenu savedGame = new JMenu("Saved Game");
+		menu.add(savedGame);
+		
+		JMenu exitGame = new JMenu("Exit Game");
+		menu.add(exitGame);
+		
+		infobox.setOpaque(true);
+		infobox.setBounds(650, 350, 180, 90);
+		infobox.setBackground(Color.white);
+		infobox.setText("Cards left:\n");
+		Border a = BorderFactory.createLineBorder(Color.black, 1);
+		infobox.setBorder(a);
+		infobox.setEditable(false);
+		
+		logo.setIcon(logos);
+		logo.setOpaque(true);		
+		logo.setBounds(160,300,300,70);
+		logo.setBackground(Color.white);
+		a = BorderFactory.createLineBorder(Color.black, 1);
+		logo.setBorder(a);
+		
+		CurrentCard.setOpaque(false);		
+		CurrentCard.setBounds(750,270,80,20);
+		CurrentCard.setText("Current Card");
+		
+		ReceiveCard.setOpaque(false);
+		ReceiveCard.setBounds(650,270,80,20);
+		ReceiveCard.setText("Receive Card");
+
+		txt1.setOpaque(true);
+		txt1.setBounds(167,105,50,20);
+		txt1.setBackground(Color.white);
+		txt1.setText("Start");
+		
+		txt2.setOpaque(true);
+		txt2.setBounds(80,300,50,20);
+		txt2.setBackground(Color.white);
+		txt2.setText("Home");
+		
+		txt3.setOpaque(true);
+		txt3.setBounds(430,540,50,20);
+		txt3.setBackground(Color.white);
+		txt3.setText("Start");
+		
+		txt4.setOpaque(true);
+		txt4.setBounds(525,345,50,20);
+		txt4.setBackground(Color.white);
+		txt4.setText("Home");
+		
+		txt5.setOpaque(true);
+		txt5.setBounds(700,352,50,20);
+		txt5.setBackground(Color.white);
+		txt5.setText("Info Box");
+		
+		// Red Home
+		redHome.setOpaque(true);
+		a = BorderFactory.createLineBorder(Color.red, 3);
+		redHome.setBorder(a);
+		redHome.setBackground(Color.white);
+		redHome.setBounds(60, 255, 80, 80);
+		back.add(redHome,0);
+		
+		// Red Start
+		redStart.setOpaque(true);
+		a = BorderFactory.createLineBorder(Color.red, 3);
+		redStart.setBorder(a);
+		redStart.setBackground(Color.white);
+		redStart.setBounds(140, 55, 80, 80);
+		back.add(redStart,0);
+		
+		// Yellow Home
+		yellowHome.setOpaque(true);
+		a = BorderFactory.createLineBorder(Color.yellow, 3);
+		yellowHome.setBorder(a);
+		yellowHome.setBackground(Color.white);
+		yellowHome.setBounds(500, 335, 80, 80);
+		back.add(yellowHome,0);
+		
+		// Yellow Start
+		yellowStart.setOpaque(true);
+		a = BorderFactory.createLineBorder(Color.YELLOW, 3);
+		yellowStart.setBorder(a);
+		yellowStart.setBackground(Color.white);
+		yellowStart.setBounds(410, 535, 80, 80);
+		back.add(yellowStart,0);
+		
+		JLabel[] square = new JLabel[100];
+		int index = 0; 
+		int i = 0;
+		
+		// Up Squares(red)
+		for(i = 0; i < 14; i++) {
+			square[index] = new JLabel();
+			square[index].setOpaque(true);
+			a = BorderFactory.createLineBorder(Color.black, 3);
+			square[index].setBorder(a);
+			square[index].setText(Integer.toString(index));
+			square[index].setBackground(Color.white);
+			square[index].setBounds(40 + 40*i, 15, 40, 40);
+			// IMAGES
+			if(index == 0 || index == 8) {
+				square[index].setIcon(new ImageIcon("images/slides/redSlideStart.png"));
+			}
+			if(index == 1 || index == 2 || index == 9 || index == 10 || i == 11) {
+				square[index].setIcon(new ImageIcon("images/slides/redSlideMedium.png"));
+			}
+			if(i == 3 || i == 12) {
+				square[index].setIcon(new ImageIcon("images/slides/redSlideEnd.png"));
+			}
+			back.add(square[index++],1);
+		}
+		
+		// Right squares (blue)
+		for(i = 0; i < 16; i++) {
+			square[index] = new JLabel();
+			square[index].setOpaque(true);
+			a = BorderFactory.createLineBorder(Color.black, 3);
+			square[index].setBorder(a);
+			square[index].setText(Integer.toString(index));
+			square[index].setBackground(Color.white);
+			square[index].setBounds(600, 40*i + 15, 40, 40);
+			//IMAGES
+			if(index == 15 || index == 23) {
+				square[index].setIcon(new ImageIcon("images/slides/blueSlideStart.png"));
+			}
+			if(index == 16 || index == 17 || index == 24 || index == 25 || index == 26) {
+				square[index].setIcon(new ImageIcon("images/slides/blueSlideMedium.png"));
+			}
+			if(index == 18 || i == 13) {
+				square[index].setIcon(new ImageIcon("images/slides/blueSlideEnd.png"));
+			}
+			back.add(square[index++],1);
+		}	
+	
+		//Down squares (yellow)
+		for(i = 14; i > 0; i--) {
+			square[index] = new JLabel();
+			square[index].setOpaque(true);
+			a = BorderFactory.createLineBorder(Color.black, 3);
+			square[index].setBorder(a);
+			square[index].setText(Integer.toString(index));
+			square[index].setBackground(Color.white);
+			square[index].setBounds(560 - 40*(14-i) , 615, 40, 40);
+			//IMAGES
+			if(index == 30 || index == 38) {
+				square[index].setIcon(new ImageIcon("images/slides/yellowSlideStart.png"));
+			}
+			if(index == 31 || index == 32 || index == 39 || index == 40 || index == 41) {
+				square[index].setIcon(new ImageIcon("images/slides/yellowSlideMedium.png"));
+			}
+			if(index == 33 || index == 42) {
+				square[index].setIcon(new ImageIcon("images/slides/yellowSlideEnd.png"));
+			}
+			back.add(square[index++],1);                 
+		}
+		
+		// Left squares(green)
+		for(i = 0; i < 16; i++) {
+			square[index] = new JLabel();
+			square[index].setOpaque(true);
+			a = BorderFactory.createLineBorder(Color.black, 3);
+			square[index].setBorder(a);
+			square[index].setText(Integer.toString(index));
+			square[index].setBackground(Color.white);
+			square[index].setBounds(0, 615 - 40*i, 40, 40);
+			// IMAGES
+			if(index == 53 || index == 45) {
+				square[index].setIcon(new ImageIcon("images/slides/greenSlideStart.png"));
+			}
+			if(index == 46 || index == 47 || index == 54 || index == 55 || index == 56) {
+				square[index].setIcon(new ImageIcon("images/slides/greenSlideMedium.png"));
+			}
+			if(index == 48 || index == 57) {
+				square[index].setIcon(new ImageIcon("images/slides/greenSlideEnd.png"));
+			}
+			back.add(square[index++],1);					
+		}
+						
+		// Red Squares
+		for(i = 1; i < 6; i++) {
+			square[index] = new JLabel();
+			square[index].setOpaque(true);
+			a = BorderFactory.createLineBorder(Color.black, 3);
+			square[index].setBorder(a);
+			square[index].setBackground(Color.red);
+			square[index].setText(Integer.toString(index));
+			square[index].setBounds(80, 40*i + 15, 40, 40);
+			back.add(square[index++],1);
+		}
+		
+		// Yellow squares 
+		for(i = 0; i < 5; i++) {
+			square[index] = new JLabel();
+			square[index].setOpaque(true);
+			a = BorderFactory.createLineBorder(Color.black, 3);
+			square[index].setBorder(a);
+			square[index].setText(Integer.toString(index));
+			square[index].setBackground(Color.yellow);
+			square[index].setBounds(520, 415 + 40*i, 40, 40);
+			back.add(square[index++],1);
+		}
+		
+		
+		//Add the elements to the back
+		back.add(logo,1);
+		back.add(Card1,1);
+		back.add(Card2,1);
+		back.add(infobox,1);
+		
+		
+		
+}
+	
+	/**
+	 * Initialize all the buttons
+	 */
+	public void initButtons(){
+		pawns[0].setIcon(pawn0);
+		pawns[0].setBounds(145, 70, 35, 35);
+		
+		pawns[1].setIcon(pawn1);
+		pawns[1].setBounds(180, 70, 35, 35);
+		
+		pawns[2].setIcon(pawn2);
+		pawns[2].setBounds(415, 560, 35, 35);
+		
+		pawns[3].setIcon(pawn3);
+		pawns[3].setBounds(450, 560, 35, 35);
+		
+		Card1.setIcon(card1);
+		Card1.setBounds(650, 150, 80, 120);
+		
+		Card2.setIcon(card2);
+		Card2.setBounds(750, 150, 80, 120);
+		
+		foldButton.setBackground(Color.red);
+		Border n = BorderFactory.createLineBorder(Color.black, 2);
+		foldButton.setBorder(n);
+		foldButton.setBounds(650, 310, 180, 35);
+		foldButton.setText("Fold Button");
+		
+		back.add(ReceiveCard,1);
+		back.add(CurrentCard,1);
+		back.add(foldButton,1);
+		back.add(txt1,2);
+		back.add(txt2,2);
+		back.add(txt3,2);
+		back.add(txt4,2);
+		back.add(txt5,1);
+		back.add(pawns[0],2);
+		back.add(pawns[1], 2);
+		back.add(pawns[2], 2);
+		back.add(pawns[3], 2);	
+	}
+	
+	/**
+	 * Initialize all the cards 
+	 */
+	public void initCards(ArrayList<Card> cards) {
+		
+		
+	}
+	
+	/**
+	 * A method that shows the winning message.
+	 * @param message is the message that if going to be printed.
+	 */
+	public void showWinningMessage(String message) {
+ 
+
+    }
+	
+	/**
+	 * Update the Card1 depending on the card that the player take. 
+	 * @param Card1
+	 */
+	public void updateCard(Card c, int position) {
+		
+		
+	}
+	
+	/**
+	 * update the pawns position
+	 * @param position
+	 */
+	public void updatePawn(int position) {
+		 
+		
+	}
+	/*public void setInfoBox(String info) {
+		this.info = info;
+	}
+	public String getInfoBox() {
+		return info;
+	}
+	*/
+	ImageIcon card1 = new ImageIcon("images/cards/backCard.png");
+	ImageIcon card2 = new ImageIcon("images/cards/card11.png");
+	ImageIcon pawn0 = new ImageIcon("images/pawns/redPawn1.png");
+	ImageIcon pawn1 = new ImageIcon("images/pawns/redPawn2.png");
+	ImageIcon pawn2 = new ImageIcon("images/pawns/yellowpawn1.png");
+	ImageIcon pawn3 = new ImageIcon("images/pawns/yellowPawn2.png");
+	ImageIcon logos = new ImageIcon("images/sorryImage.jpg");
+	/**
+	 * Main Method that creates a new snapshot g.
+	 * @param args
+	 */
+	public void resizeImages() {
+		Image card1Image = card1.getImage();
+		Image modified1Image = card1Image.getScaledInstance(80, 120, java.awt.Image.SCALE_SMOOTH);
+		card1 =  new ImageIcon(modified1Image);
+		
+		Image card2Image = card2.getImage();
+		Image modified2Image = card2Image.getScaledInstance(80, 120, java.awt.Image.SCALE_SMOOTH);
+		card2 =  new ImageIcon(modified2Image);
+		
+		Image pawnImage = pawn0.getImage();
+		Image modifiedpawnImage0 = pawnImage.getScaledInstance(35, 35, java.awt.Image.SCALE_SMOOTH);
+		pawn0 =  new ImageIcon(modifiedpawnImage0);
+		
+		Image pawnImage1 = pawn1.getImage();
+		Image modifiedpawnImage1 = pawnImage1.getScaledInstance(35, 35, java.awt.Image.SCALE_SMOOTH);
+		pawn1 =  new ImageIcon(modifiedpawnImage1);
+		
+		Image pawnImage2 = pawn2.getImage();
+		Image modifiedpawnImage2 = pawnImage2.getScaledInstance(35, 35, java.awt.Image.SCALE_SMOOTH);
+		pawn2 =  new ImageIcon(modifiedpawnImage2);
+		
+		Image pawnImage3 = pawn3.getImage();
+		Image modifiedpawnImage3 = pawnImage3.getScaledInstance(35, 35, java.awt.Image.SCALE_SMOOTH);
+		pawn3 =  new ImageIcon(modifiedpawnImage3);
+		
+		Image logoImage = logos.getImage();
+		Image modifiedlogoImage = logoImage.getScaledInstance(300, 70, java.awt.Image.SCALE_SMOOTH);
+		logos =  new ImageIcon(modifiedlogoImage);
+	}
+}
