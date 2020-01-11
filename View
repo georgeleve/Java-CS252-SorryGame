@@ -32,12 +32,9 @@ import Model.card.NumberOneCard;
 import Model.card.NumberTwoCard;
 import Model.deck.Deck;
 import Model.pawn.Pawn;
-
-
 /**
  * Class View that has all the graphics of the game.
  * @author George Leventopoulos
- *  
  */
 @SuppressWarnings("serial")
 public class View extends JFrame {
@@ -53,7 +50,6 @@ public class View extends JFrame {
 	private JTextArea infobox; // Information box.
 	private JLabel ReceiveCard, CurrentCard; //Text for receive card and current card.
 	
-	
 	//For left side.
 	private JLabel logo; //Sorry logo.
 	private JLabel redHome, yellowHome;  //Labels for homes.
@@ -66,18 +62,18 @@ public class View extends JFrame {
 	private JLabel txt4; //text in yellow start
 	private JLabel txt6; //text for front 
 	private JLabel txt7; //text for back
-	private JLabel[] square = new JLabel[100];
-	private JButton exit;
-	private JButton b0;
-	private JButton b1;
-	private JButton b2;
-	private JButton b3;
-	private JButton f0;
-	private JButton f1;
-	private JButton f2;
-	private JButton f3;
-	int index = 0; 
-	int i = 0;
+	private JLabel[] square = new JLabel[100]; //the array that keeps the squares.
+	int index = 0; //variable that keeps the squares in the view.
+	int i = 0; //temporary variable.
+	private JButton exit; //button exit the game.
+	private JButton f0; //when i press this button I move the pawns[0] forward.
+	private JButton f1; //when i press this button I move the pawns[1] forward.
+	private JButton f2;//when i press this button I move the pawns[2] forward.
+	private JButton f3;//when i press this button I move the pawns[3] forward.
+	private JButton b0;//when i press this button I move the pawns[0] backwards.
+	private JButton b1;//when i press this button I move the pawns[1] backwards.
+	private JButton b2;//when i press this button I move the pawns[2] backwards.
+	private JButton b3;//when i press this button I move the pawns[3] backwords.
 	int k0 = 3; //position of pawns[0]
 	int k1 = 3; //position of pawns[1]
 	int k2 = 33;//position of pawns[2]
@@ -130,9 +126,8 @@ public class View extends JFrame {
 		initButtons();
 		initListeners();
 	}
-	
 	/**
-	 * intialize all the components.
+	 * Intialize all the components.
 	 */
 	private void initComponents() { 
 		frame.setSize(new Dimension(850, 800));
@@ -165,7 +160,7 @@ public class View extends JFrame {
 		infobox.setBounds(650, 350, 180, 90);
 		infobox.setBackground(Color.white);
 		infobox.setText("Please select card..");
-		Border a = BorderFactory.createLineBorder(Color.black, 1);
+		Border a = BorderFactory.createLineBorder(Color.black, 3);
 		infobox.setBorder(a);
 		infobox.setEditable(false);
 		
@@ -205,11 +200,11 @@ public class View extends JFrame {
 		txt4.setText("Home");
 		
 		txt6.setOpaque(false);
-		txt6.setBounds(670,480,80,20);
+		txt6.setBounds(670,440,80,20);
 		txt6.setText("Move Forward");
 		
 		txt7.setOpaque(false);
-		txt7.setBounds(670,580,100,20);
+		txt7.setBounds(670,560,100,20);
 		txt7.setText("Move Backwards");
 		
 		// Red Start
@@ -398,28 +393,27 @@ public class View extends JFrame {
 		back.add(Card2,1);
 		back.add(infobox,1);		
 	}
-	
 	/**
 	 * Initialize all the buttons
 	 */
 	public void initButtons(){
 		f0.setIcon(pawn0);
-		f0.setBounds(670, 450, 35, 35);
+		f0.setBounds(670, 460, 35, 35);
 		f1.setIcon(pawn1);
-		f1.setBounds(720, 450, 35, 35);
+		f1.setBounds(720, 460, 35, 35);
 		f2.setIcon(pawn2);
 		f2.setBounds(670, 500, 35, 35);
 		f3.setIcon(pawn3);
 		f3.setBounds(720, 500, 35, 35);
 		
 		b0.setIcon(pawn0);
-		b0.setBounds(670, 550, 35, 35);
+		b0.setBounds(670, 580, 35, 35);
 		b1.setIcon(pawn1);
-		b1.setBounds(720, 550, 35, 35);
+		b1.setBounds(720, 580, 35, 35);
 		b2.setIcon(pawn2);
-		b2.setBounds(670, 600, 35, 35);
+		b2.setBounds(670, 620, 35, 35);
 		b3.setIcon(pawn3);
-		b3.setBounds(720, 600, 35, 35);
+		b3.setBounds(720, 620, 35, 35);
 		
 		pawns[0].setIcon(pawn0);
 		pawns[0].setBounds(145, 70, 35, 35);
@@ -432,12 +426,11 @@ public class View extends JFrame {
 		
 		pawns[3].setIcon(pawn3);
 		pawns[3].setBounds(450, 560, 35, 35);
-		
-		
+			
 		Card1.setIcon(card1);
 		Card1.setBounds(650, 150, 80, 120);
 		
-		Card2.setIcon(card2);
+		Card2.setIcon(card1);
 		Card2.setBounds(750, 150, 80, 120);
 		
 		foldButton.setBackground(Color.red);
@@ -495,26 +488,24 @@ public class View extends JFrame {
 		square[position].add(pawns[p],0);
 		back.repaint();
 	}
+	/**
+	 * Updates the infobox
+	 * @param message the info that we want to show to the user.
+	 */
 	public void updateInfobox(String message) {
 		infobox.setText(message);
 		back.repaint();
 	}
+	/**
+	 * Returns the Card1 Button
+	 * @return Card1 the button that the user press in order to change card.
+	 */
 	public JButton returnCardButton() {
 		return Card1;
 	}
-	public JButton getPawn0() {
-		return pawns[0];
+	public JLayeredPane getBack() {
+		return back;
 	}
-	public JButton getPawn1() {
-		return pawns[1];
-	}
-	public JButton getPawn2() {
-		return pawns[2];
-	}
-	public JButton getPawn3() {
-		return pawns[3];
-	}
-
 	/**
 	 * A method that shows the winning message.
 	 * @param message is the message that if going to be printed.
@@ -522,7 +513,27 @@ public class View extends JFrame {
 	public void showWinningMessage(String message) {
 		JOptionPane.showMessageDialog(this, message);
     }
-	
+	public JTextArea getInfobox() {
+		return infobox;
+	}
+	public JButton getPawn0(){
+		return pawns[0];
+	}
+	public JButton getPawn1(){
+		return pawns[1];
+	}
+	public JButton getPawn2(){
+		return pawns[2];
+	}
+	public JButton getPawn3(){
+		return pawns[3];
+	}
+	public JButton getFoldbutton() {
+		return foldButton;
+	}
+	/**
+	 * Initialize the listeners in the game.
+	 */
 	public void initListeners() {	
 		exit.addActionListener(new ActionListener(){			
 			@Override
@@ -531,12 +542,6 @@ public class View extends JFrame {
 			}
 		});
 		
-		foldButton.addActionListener(new ActionListener(){			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updateInfobox("Fold button, next player.");
-			}
-		});
 		
 		f0.addActionListener(new ActionListener(){			
 			@Override
@@ -567,19 +572,6 @@ public class View extends JFrame {
 			}
 		});
 		
-		f2.addActionListener(new ActionListener(){		
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updatePawn(k2, 2);
-				k2++;
-				if(k2 == 60) k2 = 0;
-				if(k2 == 32) k2 = 67;
-				if((k2 == 73 && k3==74) ||(k2==74 && k3==73)) {
-					infobox.setBackground(Color.yellow);
-					updateInfobox("Congratulations!\n\\n\nYELLOW pawns win!");
-				}
-			}
-		});
 		
 		f3.addActionListener(new ActionListener(){			
 			@Override
@@ -627,13 +619,13 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				k3--;
 				if(k3 == -1) k3=59;
-				updatePawn(k3, 3);		
+				updatePawn(k3, 3);
 			}
 		});
 	}
+
 	//Create the images that we are going to resize.
 	ImageIcon card1 = new ImageIcon("images/cards/backCard.png");
-	ImageIcon card2 = new ImageIcon("images/cards/card11.png");
 	ImageIcon pawn0 = new ImageIcon("images/pawns/redPawn1.png");
 	ImageIcon pawn1 = new ImageIcon("images/pawns/redPawn2.png");
 	ImageIcon pawn2 = new ImageIcon("images/pawns/yellowpawn1.png");
@@ -641,8 +633,7 @@ public class View extends JFrame {
 	ImageIcon logos = new ImageIcon("images/sorryImage.jpg");
 	ImageIcon greenback = new ImageIcon("images/background.png");
 	/**
-	 * Main Method that creates a new snapshot g.
-	 * @param args
+	 * Resize the images.
 	 */
 	public void resizeImages() {
 		Image greenbackImage = greenback.getImage();
@@ -652,10 +643,6 @@ public class View extends JFrame {
 		Image card1Image = card1.getImage();
 		Image modified1Image = card1Image.getScaledInstance(80, 120, java.awt.Image.SCALE_SMOOTH);
 		card1 =  new ImageIcon(modified1Image);
-		
-		Image card2Image = card2.getImage();
-		Image modified2Image = card2Image.getScaledInstance(80, 120, java.awt.Image.SCALE_SMOOTH);
-		card2 =  new ImageIcon(modified2Image);
 		
 		Image pawnImage = pawn0.getImage();
 		Image modifiedpawnImage0 = pawnImage.getScaledInstance(35, 35, java.awt.Image.SCALE_SMOOTH);
