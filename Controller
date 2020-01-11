@@ -7,7 +7,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
 import Model.card.Card;
 import Model.card.NumberCard;
 import Model.card.NumberOneCard;
@@ -24,7 +23,6 @@ import Model.square.Square;
 import Model.square.StartSlideSquare;
 import Model.square.StartSquare;
 import view.View;
-
 /**
  * This class is the master of the game and
  * controls all the operarions.
@@ -40,17 +38,35 @@ public class Controller {
 	private int fold;
 	private int isReady;
 	int l = 0;
+	int k0 = -1; //position of pawns[0]
+	int k1 = -1; //position of pawns[1]
+	int k2 = -1;//position of pawns[2]
+	int k3 = -1;//position of pawns[3]
 	Card card;
+	Card crd;
+	int turn = 1;
 	NumberCard c;
 	int num = 1;
 	int num1 = 0;
 	public int cardscounter = 44;
 	Deck deck = new Deck();
+	boolean hasStarted0 = false;
+	boolean hasStarted1 = false;
+	boolean hasStarted2 = false;
+	boolean hasStarted3 = false;
 	
+	
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Controller c = new Controller();
 		c.initialize();
 	}
+	/**
+	 * initialize what is needed
+	 */
 	public void initialize() {
 		this.fold = 0;
         this.isReady = 0;
@@ -71,19 +87,300 @@ public class Controller {
 				l++;
 			}
 		});
-		/*
 		view.getPawn0().addActionListener(new ActionListener(){			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(!card.getName().equals("SorryCard")) {
-					if(card.getName().equals("NumberOneCard")) {
-						deck.getGameCards().get(l).movePawn();
+				if(turn == 1) {
+					if(canMove0() && card.getName()!="SorryCard") {
+						canStart0();
+						if(hasStarted0 == true) {	
+							if(k0 == -1) {
+								if(c.getValue() == 1 || (c.getValue() == 2)) k0 = 3; 
+							} 
+							else if(c.getValue() == 4){
+								k0 = k0-4;
+							}else {
+								k0 = k0 + c.getValue();
+							}
+							
+							if(k0 == -1)k0 = 59; //special case for card4.
+							//if(k0 == 60) k0 = 0;
+							if(k0 == 2) k0 = 60;
+							
+							view.updatePawn(k0, 0);
+							
+							if((k0==66 && k1==65) || (k0==65 && k1==66)) {
+								view.getInfobox().setBackground(Color.red);
+								view.updateInfobox("Congratulations!\n\n\nRED pawns win!!!");
+							}
+							
+							view.updateInfobox(Integer.toString(k0));
+							//Slides
+							if(k0==23 || k0==38 || k0==53) {
+								k0 =k0+4;
+								view.updatePawn(k0,0);
+								view.updateInfobox("Slide....");
+							}
+							if(k0 ==15 || k0==28 || k0==45) {
+								k0 = k0+3;
+								view.updatePawn(k0,0);
+								view.updateInfobox("Slide....");
+							}
+						}
 					}
-				}	
+				}else {
+					view.updateInfobox("It's Player's 1 turn.");
+				}
 			}
 		});
-		*/
+	
+	
+	view.getPawn1().addActionListener(new ActionListener(){			
+		public void actionPerformed(ActionEvent arg0) {
+			if(turn == 1) {
+				if(canMove1() && card.getName()!="SorryCard") {
+					canStart1();
+					if(hasStarted1 == true) {	
+						if(k1 == -1) {
+							if(c.getValue() == 1 || (c.getValue() == 2)) {
+								k1 = 3; //remove pawn from start
+							}else {
+								k1 = k3; // sorry card.
+								k0 = 3;
+								view.updatePawn(3,0);
+								view.updateInfobox("SorryCard!\nPlease select fold.");//using sorry card
+							}
+						} 
+						else if(c.getValue() == 4){
+							k1 = k1-4;
+						}else {
+							k1 = k1 + c.getValue();
+						}
+						
+						if(k1 == -1)k1 = 59; 
+						if(k1 == 60) k1 = 0;
+						if(k1 == 2) k1 = 60;
+						view.updatePawn(k1, 1);
+						
+						//If the is a winner.
+						if((k0==66 && k1==65) || (k0==65 && k1==66)) {
+							view.getInfobox().setBackground(Color.red);
+							view.updateInfobox("Congratulations!\n\n\nRED pawns win!!!");
+						}
+						//view.updateInfobox(Integer.toString(k1));
+						
+						//Slides
+						if(k1==23 || k1==38 || k1==53) {
+							k1 =k1+4;
+							view.updatePawn(k1,1);
+							view.updateInfobox("Slide....");
+						}
+						if(k1 ==15 || k1==28 || k1==45) {
+							k1 = k1+3;
+							view.updatePawn(k1,1);
+							view.updateInfobox("Slide....");
+						}
+					}
+				}
+		}else {
+			view.updateInfobox("It's Player's 1 turn.");
+		}
+		}
+	});
+	view.getPawn2().addActionListener(new ActionListener(){		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if(turn ==2) {
+			if(canMove2()) {
+				canStart2();
+				if(hasStarted2 == true) {	
+					if(k2 == -1) {
+						if(c.getValue() == 1 || (c.getValue() == 2)) {
+							k2 = 33; 
+						}else {
+							k2 = k0; // sorry card.
+							k0 = 3;
+							view.updatePawn(3,0);
+							view.updateInfobox("SorryCard!\nPlease select fold.");
+							//view.getPawn0().setBounds(145, 70, 35, 35);
+							//view.getBack().repaint();
+						}
+					}
+					else if(c.getValue() == 4){
+						k2 = k2-4;
+					}else {
+						k2 = k2 + c.getValue();
+					}
+					
+					
+					if(k2 == 60) {
+						k2 = 3;
+						view.updateInfobox("Slide....");
+					}
+					if(k2 == 32) k2 = 67;
+					
+					view.updatePawn(k2, 2);
+					//If there is a winner.
+					if((k2 == 73 && k3==72) ||(k2==72 && k3==73)) {
+						view.getInfobox().setBackground(Color.yellow);
+						view.updateInfobox("Congratulations!\n\\n\nYELLOW pawns win!");
+					}
+				//	view.updateInfobox(Integer.toString(k2));
+					if(k2==8 || k2==23 || k2==53) {
+						k2 =k2+4;
+						view.updatePawn(k2,2);
+						view.updateInfobox("Slide....");
+					}
+					if(k2 ==15 || k2==45) {
+						k2 = k2+3;
+						view.updatePawn(k2,2);
+						view.updateInfobox("Slide....");
+					}
+				}
+			} 
+		}else {
+			view.updateInfobox("It's Player's 2 turn.");
+		}
 	}
+	});
+	view.getPawn3().addActionListener(new ActionListener(){		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if(turn ==2) {
+			if(canMove3()) {
+				canStart3();
+				if(hasStarted3 == true) {	
+					if(k3 == -1) {
+						if(c.getValue() == 1 || (c.getValue() == 2)) {
+							k3 = 33; 
+						}else {
+							k3 = k1; // sorry card.
+							k1 = 3;
+							view.updatePawn(3,1);
+							view.updateInfobox("SorryCard!\nPlease select fold.");
+						}
+					} 
+					else if(c.getValue() == 4){
+						k3 = k3-4;
+					}else {
+						k3 = k3 + c.getValue();
+					}
+					
+					
+					if(k3 == 60) {
+						k3 = 3;
+						view.updateInfobox("Slide....");
+					}
+					if(k3 == 32) k3 = 67;
+					
+					view.updatePawn(k3, 3);
+					//If there is a winner.
+					if((k2 == 73 && k3==72) ||(k2==72 && k3==73)) {
+						view.getInfobox().setBackground(Color.yellow);
+						view.updateInfobox("Congratulations!\n\\n\nYELLOW pawns win!");
+					}
+					//view.updateInfobox(Integer.toString(k3));
+					if(k3==8 || k3==23 || k3==53) {
+						k3 =k3+4;
+						view.updatePawn(k3,3);
+						view.updateInfobox("Slide....");
+					}
+					if(k3==15 || k3==45) {
+						k3 = k3+3;
+						view.updatePawn(k3,3);
+						view.updateInfobox("Slide....");
+					}
+				}
+			}
+		}else {
+			view.updateInfobox("It's Player's 2 turn.");
+		}
+		}
+	});
+	
+	view.getFoldbutton().addActionListener(new ActionListener(){			
+		public void actionPerformed(ActionEvent arg0) {
+			view.updateInfobox("Fold Button, next player.");
+		}
+	});	
+}
+	
+	public void canStart0() {
+		if(k0 == -1) {
+			if(c.getValue() == 1 || c.getValue() == 2 || (card.getName() =="SorryCard")) {
+				hasStarted0 = true;
+			}else {
+				view.updateInfobox("You can't move from start \nposition with this card."
+						+ "\nPlease select fold.");
+			}
+		}
+	}	
+	public void canStart1() {
+		if(k1 == -1 && (c.getValue() == 1 || c.getValue() == 2)) {
+			hasStarted1 = true;
+		}else {
+			view.updateInfobox("You can't move from start \nposition with this card."
+					+ "\nPlease select fold.");
+		}
+	}
+	public void canStart2() {
+		if(k2 == -1 && (c.getValue() == 1 || c.getValue() == 2 || card.getName() =="SorryCard")) {
+			hasStarted2 = true;
+		}else {
+			view.updateInfobox("You can't move from start\nposition with this card."
+					+ "\nPlease select fold.");
+		}
+	}
+	public void canStart3() {
+		if(k3 == -1 && (c.getValue() == 1 || c.getValue() == 2||card.getName() =="SorryCard")) {
+			hasStarted3 = true;
+		}else {
+			view.updateInfobox("You can't move from start\nposition with this card."
+					+ "\nPlease select fold.");
+		}
+	}
+	public boolean canMove0() {
+		if(card.getName() != "SorryCard") {
+			if(k0+c.getValue() >= 67){
+				view.updateInfobox("You can't move your pawn with\nthis card,please select fold.");
+				return false;
+			}
+		}
+		return true;
+	}
+	public boolean canMove1() {
+		if(card.getName() != "SorryCard") {
+			if(k1+c.getValue() >= 67) {
+				view.updateInfobox("You can't move your pawn with\nthis card, please select fold.");
+				return false;
+			}
+		}
+		return true;
+	}
+	public boolean canMove2() {
+		if(card.getName() != "SorryCard") {
+			if(k2+c.getValue()>=74) {
+				view.updateInfobox("You can't move your pawn with\nthis card,please select fold.");
+				return false;
+			}
+			if(k2+c.getValue() > 59) {
+				
+			}
+		}
+		return true;
+	}
+	public boolean canMove3() {
+		if(card.getName() != "SorryCard") {
+			if(k3+c.getValue()>=74) {
+				view.updateInfobox("You can't move your pawn with\nthis card,please select fold.");
+				return false;
+			}
+		}
+		return true;
+	}
+	/**
+	 * Transformer , Initialize all the pawns.
+	 */
 	public void initPawns() {
 		pawns[0] = new Pawn(Color.red,-1);
 		pawns[1] = new Pawn(Color.red,-1);
@@ -92,6 +389,9 @@ public class Controller {
 		player1 = new Player(Color.red, "Player1", pawns[0], pawns[1]);
 		player2 =  new Player(Color.yellow, "Player2", pawns[2], pawns[3]);
 	}
+	/**
+	 * Transformer , Initalize all the squares.
+	 */
 	public void initSquares() {
 		for(int i  = 0; i < 73;i++) {	
 			if(i==0||i == 8||i==15||i==23||i==30|| i==38 || i==45 || i==53) { 
@@ -116,12 +416,21 @@ public class Controller {
 				squares[i] = new SimpleSquare(i);
 		}
 	}
+	/**
+	 * Removes and replace a card.
+	 * @param positionOfCard the position that we want to replace
+	 */
 	public void removeAndReplaceCard(int positionOfCard) {
 		if(deck.getGameCards().isEmpty()) {
 			deck.initCards(); //suffle the cards again.
 		}else {
 			deck.getGameCards().remove(positionOfCard);
+			
+			
 			card = deck.getGameCards().get(positionOfCard+1);
+			if(card.getName() != "SorryCard") {
+				c = (NumberCard) deck.getGameCards().get(positionOfCard+1);
+			}
 			view.updateCard(card);
 			if(num % 2 == 0 && card.getName()!="NumberTwoCard") {
 				num1=2;
@@ -132,6 +441,7 @@ public class Controller {
 			view.updateInfobox("                      Infobox\n"
 					+ "Cards left: " + cardscounter + "   "
 					+"     Turn: Player"+ num1 +"\n"+ card.toString());	
+			turn = num1;
 			//c.movePawn();
 			//String a = card.toString();
 			//JOptionPane.showInputDialog(this, a);
@@ -146,7 +456,9 @@ public class Controller {
 		}
 		cardscounter--;
 	}
-
+	/**
+	 * Check if the card can be played.
+	 */
 	public void checkIfItCanBePlayed(int positionOfCard) {
 		Card cardToPlay = deck.getGameCards().get(positionOfCard);
 		view.updatePawn(0, 9);
@@ -171,8 +483,7 @@ public class Controller {
 		
 	}
 	/**
-	 * Transformer
-	 * Sets players turn.
+	 * Transformer ,Sets players turn.
 	 */
 	public void setTurn() {
 		
@@ -186,52 +497,4 @@ public class Controller {
 			//return true;
 		//return false;
 	//}
-
-	public void proxeiro() {
-		/*
-		if(card == 1) {
-			//metakinise to pioni kata 1
-			// 'h bgalto apo to start
-		}
-		if(card == 2){
-			//metakinise to pioni 2 brosta }  kai xanapaije
-			// 'h bgalto apo to start     }
-		}
-		if(card == 3){
-			//metakinise to pioni kata 3 mprosta
-		}
-
-		if(card == 4){
-			//metakinise to pioni 4 thesis piso
-		}
-		
-		if(card == 5){
-			//metakinise to pioni kata 5 mprosta
-		}
-		
-		if(card == 7){
-			//7 thesis pros ta embros 'h na xoriso tis  thesis pros ta embros gia ta dyo pionia.
-		}
-		
-		if(card == 8){
-			//metakinise to pioni 8 theseis mprosta
-		}
-		if(card == 10){
-			//metakinise to pioni 8 theseis mprosta 'h mia thesi piso
-		}
-		if(card == 11){
-			//metakinise to pioni 11 theseis mprosta(an ginetai)
-			 * h'
-			 * allaxe me pioni antipalou
-			 * 'h na paths fold
-		}
-		if(card == 12){
-			//metakinise to pioni 12 theseis mprosta
-		}
-		if(card == sorry){
-			apo tin thesi start (kai mono) to pioni allazei me thn thesi tou antipalou
-			kai o antipalos paei sto start
-		}
-		*/
-	}
 }
