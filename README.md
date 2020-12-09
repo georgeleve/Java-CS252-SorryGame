@@ -1,3 +1,3 @@
 # Java-CS252-SorryGame
 
-I created the "Sorry game" using Model View Controller in java
+Implemented "Sorry game" for two players in java using Model View Controller architecture. 
