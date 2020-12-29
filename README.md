@@ -1,3 +1,3 @@
-# Java-CS252-SorryGame
+# CS252-SorryGame
 
-Implemented "Sorry game" for two players in java using Model View Controller architecture. 
+Implemented "Sorry game" for two players using MVC architecture. 
