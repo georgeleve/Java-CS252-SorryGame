@@ -19,7 +19,7 @@ import Model.square.StartSquare;
 import view.View;
 /**
  * This class is the master of the game and
- * controls all the operarions. It provides communication between model and view.
+ * controls all the operations. It provides communication between model and view.
  * @author George Leventopoulos
  */
 public class Controller {
@@ -61,7 +61,7 @@ public class Controller {
 		initListeners();
 	}
 	/**
-	 * Transformer , Initalize all the listeners.
+	 * Transformer, initialize all the listeners.
 	 */
 	public void initListeners() {
 		view.getExitButton().addActionListener(new ActionListener(){			
@@ -179,352 +179,351 @@ public class Controller {
 				}
 			}
 		});
-	view.getPawn1().addActionListener(new ActionListener(){			
-		public void actionPerformed(ActionEvent arg0) {
-			if(turn == 1) {
-				if(canMove1() && canStart1()) {	
-						if(k1 == -1) {
+		view.getPawn1().addActionListener(new ActionListener(){			
+			public void actionPerformed(ActionEvent arg0) {
+				if(turn == 1) {
+					if(canMove1() && canStart1()) {	
+							if(k1 == -1) {
+								if(c.getValue() == 1 || (c.getValue() == 2)) 
+									k1 = 3; 
+								else if(card.getName() == "SorryCard") {
+									if(canBeSwitched(k3)) {
+										k1 = k3;
+										view.updateInfobox("Your pawns can be switched.");
+									}else {
+										view.updateInfobox("You pawn can't be switched.");
+									}
+								}
+							} 
+							else if(c.getValue() == 4){
+									k1 = k1-4;
+									card7 = 0;
+							}else if(c.getValue() ==7) {
+								if(card7 ==7) {	
+									view.updateInfobox("Your pawns moved 7 \nsteps successfully");
+								}else {
+									k1++;
+									card7++;
+								}	
+							}else if(c.getValue() ==10) {
+								view.showMessage("Select yes for 10 steps forward "
+										+ "\nSelect no for 1 step backwards.");
+								if(view.returnMessage() == 0) {
+									k1 = k1+c.getValue();
+								}else {
+									k1--;
+								}
+							}else if(c.getValue() == 11) {
+								view.showMessage("Select yes for 11 steps forward "
+										+ "\nSelect no for switching pawn with enemy");
+								if(view.returnMessage() == 0) {
+									k1 = k1+c.getValue();
+								}else {
+									if(canBeSwitched(k3)) {
+										temp = k1;
+										k1 = k3;
+										k3 = temp;
+										view.updatePawn(k3, 3);
+										view.updateInfobox("Your pawns can be switched.");
+									}else {
+										view.updateInfobox("You pawn can't be switched.");
+									}
+								}
+							}else {
+								card7 =0;
+								k1 = k1 + c.getValue();
+							}
+							
+							if(k1 <= -1)k1 = 59; //special case for card4.
+							if(k1 == 2) k1 = 60;
+							
+							if(k1>-1)view.updatePawn(k1, 1); //update pawn in view
+							
+							if((k0==66 && k1==65) || (k0==65 && k1==66)) {
+								view.getInfobox().setBackground(Color.red);
+								view.getPawn0().setEnabled(false);
+								view.getPawn1().setEnabled(false);
+								view.getPawn2().setEnabled(false);
+								view.getPawn3().setEnabled(false);
+								view.getCardButton().setEnabled(false);
+								view.updateInfobox("Congratulations!\n\n\nRED pawns win!!!");
+							}
+							//view.updateInfobox(Integer.toString(k1));
+							
+							//Slides
+							if(k1==23 || k1==38 || k1==53) {
+								k1 =k1+4;
+								view.updatePawn(k1,1);
+								view.updateInfobox("Slide....");
+							}
+							if(k1==15 || k1==30 || k1==45) {
+								k1 = k1+3;
+								view.updatePawn(k1,1);
+								view.updateInfobox("Slide....");
+							}
+							//Pawns in the same position
+							if(k1==k0 && k0!=-1 && k1!=-1) {
+								k0 = -1;
+								view.updatePawn(74,0);
+							}else if(k1==k2 && k1!=-1 && k2!=-1) {
+								k2 = -1;
+								view.updatePawn(76,2);
+							}else if(k1==k3 && k1!=-1 && k3!=-1) {
+								k3 =-1;
+								view.updatePawn(77,3);
+							}
+					}
+				}else {
+					view.updateInfobox("It's Player's 2 turn.");
+				}
+			}
+		});
+		view.getPawn2().addActionListener(new ActionListener(){		
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(turn == 2) {
+				if(canMove2() && canStart2()) {
+						if(k2 == -1) {
 							if(c.getValue() == 1 || (c.getValue() == 2)) 
-								k1 = 3; 
+								k2 = 33; 
 							else if(card.getName() == "SorryCard") {
-								if(canBeSwitched(k3)) {
-									k1 = k3;
+								if(canBeSwitched(k0)) {
+									k2 = k0;
+									view.updateInfobox("Your pawn can be switched.");
+								}else {
+									view.updateInfobox("You pawn can't be switched.");
+								}
+							}
+						} 
+						else if(c.getValue() == 4) {
+							card7 =0;
+							if(k2-4>=0){
+								k2 = k2-4;
+							}else {
+								k2=59;
+							}
+						}else {
+							if(k2 + c.getValue()>31 && k2<31 && k2>21) {
+								k2 = 68;
+							}else if(k2+c.getValue() > 60 && k2 < 67){ 
+								k2 = 1;
+							}else if(c.getValue()==7) {
+								if(card7 ==7) {	
+									view.updateInfobox("Your pawns moved 7 \nsteps successfully");
+								}else {
+									k2++;
+									card7++;
+								}	
+							}else if(c.getValue() ==10) {
+								view.showMessage("Select yes for 10 steps forward "
+										+ "\nSelect no for 1 step backwards.");
+								if(view.returnMessage() == 0) {
+									k2 = k2+c.getValue();
+								}else {
+									k2--;
+								}	
+							}else if(c.getValue() == 11) {
+								view.showMessage("Select yes for 11 steps forward "
+										+ "\nSelect no for switching pawns with enemy");
+								if(view.returnMessage() == 0) {
+									k2 = k2+c.getValue();
+								}else {
+									if(canBeSwitched(k0)) {
+										temp = k2;
+										k2 = k0;
+										k0 = temp;
+										view.updatePawn(k0, 0);
+										view.updateInfobox("Your pawns can be switched.");
+									}else {
+										view.updateInfobox("You pawn can't be switched.");
+									}
+								}
+							}else{
+								card7 = 0;
+								k2 = k2 + c.getValue();
+							}						
+						}
+						//Slide
+						if(k2 == 60) {
+							k2 = 3;
+							view.updateInfobox("Slide....");
+						}
+						if(k2 == 31 && c.getValue()!=4) {
+							k2=67;
+						}
+						if(k2 ==30) {
+							k2=29;
+						}
+						//if(k2 == 31 || k2 ==30) k2 = 67;
+						
+						if(k2>-1)view.updatePawn(k2, 2); //update pawn
+						
+						//Check if there is a winner.
+						if((k2 == 73 && k3==72) ||(k2==72 && k3==73)) {
+							view.getInfobox().setBackground(Color.yellow);
+							view.getPawn0().setEnabled(false);
+							view.getPawn1().setEnabled(false);
+							view.getPawn2().setEnabled(false);
+							view.getPawn3().setEnabled(false);
+							view.getCardButton().setEnabled(false);
+							view.updateInfobox("Congratulations!\nYELLOW pawns win!");
+						}
+					  //view.updateInfobox(Integer.toString(k2));
+						if(k2==8 || k2==23 || k2==53) {
+							k2 =k2+4;
+							view.updatePawn(k2,2);
+							view.updateInfobox("Slide....");
+						}
+						if(k2 ==15 || k2==45) {
+							k2 = k2+3;
+							view.updatePawn(k2,2);
+							view.updateInfobox("Slide....");
+						}
+						
+						//Pawns in the same position
+						if(k2 == k0 && k2!=-1 && k0!=-1) {
+							k0 = -1;
+							view.updatePawn(74,0);
+						}else if(k2 == k1 && k2!= -1 && k1!=-1) {
+							k1 = -1;
+							view.updatePawn(75,1);
+						}else if(k2 == k3 && k2!=-1 && k3!=-1) {
+							k3 =-1;
+							view.updatePawn(77,3);
+						}
+				} 
+			}else {
+				view.updateInfobox("It's Player's 1 turn.");
+			}
+		}
+		});
+		view.getPawn3().addActionListener(new ActionListener(){		
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(turn == 2) {
+				if(canMove3() && canStart3()) {
+						if(k3 == -1) {
+							if(c.getValue() == 1 || (c.getValue() == 2)) 
+								k3 = 33; 
+							else if(card.getName() == "SorryCard") {
+								if(canBeSwitched(k1) && k3 ==-1) {
+									k3 = k1;
 									view.updateInfobox("Your pawns can be switched.");
 								}else {
 									view.updateInfobox("You pawn can't be switched.");
 								}
 							}
 						} 
-						else if(c.getValue() == 4){
-								k1 = k1-4;
-								card7 = 0;
-						}else if(c.getValue() ==7) {
-							if(card7 ==7) {	
-								view.updateInfobox("Your pawns moved 7 \nsteps successfully");
+						else if(c.getValue() == 4) {
+							card7 = 0;
+							if(k3-4>=0){
+								k3 = k3-4;
 							}else {
-								k1++;
-								card7++;
-							}	
-						}else if(c.getValue() ==10) {
-							view.showMessage("Select yes for 10 steps forward "
-									+ "\nSelect no for 1 step backwards.");
-							if(view.returnMessage() == 0) {
-								k1 = k1+c.getValue();
-							}else {
-								k1--;
-							}
-						}else if(c.getValue() == 11) {
-							view.showMessage("Select yes for 11 steps forward "
-									+ "\nSelect no for switching pawn with enemy");
-							if(view.returnMessage() == 0) {
-								k1 = k1+c.getValue();
-							}else {
-								if(canBeSwitched(k3)) {
-									temp = k1;
-									k1 = k3;
-									k3 = temp;
-									view.updatePawn(k3, 3);
-									view.updateInfobox("Your pawns can be switched.");
-								}else {
-									view.updateInfobox("You pawn can't be switched.");
-								}
+								k3 =59;
 							}
 						}else {
-							card7 =0;
-							k1 = k1 + c.getValue();
+							if(k3 + c.getValue()>31 && k3<31 && k3>21) {
+								k3 = 67;
+							}else if(k3+c.getValue() > 60 && k3 < 67){ 
+								k3 = 1;
+							}else if(c.getValue()==7) {
+								if(card7 ==7) {	
+									view.updateInfobox("Your pawns moved 7 \nsteps successfully");
+								}else {
+									k3++;
+									card7++;
+								}
+							}else if(c.getValue() ==10) {
+								view.showMessage("Select yes for 10 steps forward "
+										+ "\nSelect no for 1 step backwards.");
+								if(view.returnMessage() == 0) {
+									k3 = k3+c.getValue();
+								}else {
+									k3--;
+								}		
+							}else if(c.getValue() == 11) {
+								view.showMessage("Select yes for 11 steps forward "
+										+ "\nSelect no for switching pawns with enemy");
+								if(view.returnMessage() == 0) {
+									k3 = k3+c.getValue();
+								}else {
+									if(canBeSwitched(k1)) {
+										temp = k3;
+										k3 = k1;
+										k1 = k3;
+										view.updatePawn(k1, 1);
+										view.updateInfobox("Your pawns can be switched.");
+									}else {
+										view.updateInfobox("You pawn can't be switched.");
+									}
+								}
+							}else {
+								card7 = 0;
+								k3 = k3 + c.getValue();
+							}						
 						}
 						
-						if(k1 <= -1)k1 = 59; //special case for card4.
-						if(k1 == 2) k1 = 60;
+						if(k3 == 60) {
+							k3 = 3;
+							view.updateInfobox("Slide....");
+						}
+						if(k3 == 31 && c.getValue()!=4) {
+							k3=67;
+						}
+						if(k3 == 30) {
+							k3 =29;
+						}
 						
-						if(k1>-1)view.updatePawn(k1, 1); //update pawn in view
+						if(k3>-1)view.updatePawn(k3, 3); //update the view.
 						
-						if((k0==66 && k1==65) || (k0==65 && k1==66)) {
-							view.getInfobox().setBackground(Color.red);
+						//Check for a winner.
+						if((k2 == 73 && k3==72) ||(k2==72 && k3==73)) {
+							view.getInfobox().setBackground(Color.yellow);
 							view.getPawn0().setEnabled(false);
 							view.getPawn1().setEnabled(false);
 							view.getPawn2().setEnabled(false);
 							view.getPawn3().setEnabled(false);
 							view.getCardButton().setEnabled(false);
-							view.updateInfobox("Congratulations!\n\n\nRED pawns win!!!");
+							view.updateInfobox("Congratulations!\n\n\nYELLOW pawns win!");
 						}
-						//view.updateInfobox(Integer.toString(k1));
+						//view.updateInfobox(Integer.toString(k3));
 						
-						//Slides
-						if(k1==23 || k1==38 || k1==53) {
-							k1 =k1+4;
-							view.updatePawn(k1,1);
+						//Slides..
+						if(k3==8 || k3==23 || k3==53) {
+							k3 =k3+4;
+							view.updatePawn(k3,3);
 							view.updateInfobox("Slide....");
 						}
-						if(k1==15 || k1==30 || k1==45) {
-							k1 = k1+3;
-							view.updatePawn(k1,1);
+						if(k3==15 || k3==45) {
+							k3 = k3+3;
+							view.updatePawn(k3,3);
 							view.updateInfobox("Slide....");
 						}
+						
 						//Pawns in the same position
-						if(k1==k0 && k0!=-1 && k1!=-1) {
+						if(k3 == k0 && k3!=-1 && k0!=-1) {
 							k0 = -1;
 							view.updatePawn(74,0);
-						}else if(k1==k2 && k1!=-1 && k2!=-1) {
+						}else if(k3 == k1 && k3!=-1 && k1!=-1) {
+							k1 = -1;
+							view.updatePawn(75,1);
+						}else if(k3 == k2 && k3!=-1 && k2!=-1) {
 							k2 = -1;
 							view.updatePawn(76,2);
-						}else if(k1==k3 && k1!=-1 && k3!=-1) {
-							k3 =-1;
-							view.updatePawn(77,3);
 						}
-				}
+				}	
 			}else {
-				view.updateInfobox("It's Player's 2 turn.");
+				view.updateInfobox("It's Player's 1 turn.");
 			}
 		}
-	});
-	view.getPawn2().addActionListener(new ActionListener(){		
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			if(turn == 2) {
-			if(canMove2() && canStart2()) {
-					if(k2 == -1) {
-						if(c.getValue() == 1 || (c.getValue() == 2)) 
-							k2 = 33; 
-						else if(card.getName() == "SorryCard") {
-							if(canBeSwitched(k0)) {
-								k2 = k0;
-								view.updateInfobox("Your pawn can be switched.");
-							}else {
-								view.updateInfobox("You pawn can't be switched.");
-							}
-						}
-					} 
-					else if(c.getValue() == 4) {
-						card7 =0;
-						if(k2-4>=0){
-							k2 = k2-4;
-						}else {
-							k2=59;
-						}
-					}else {
-						if(k2 + c.getValue()>31 && k2<31 && k2>21) {
-							k2 = 68;
-						}else if(k2+c.getValue() > 60 && k2 < 67){ 
-							k2 = 1;
-						}else if(c.getValue()==7) {
-							if(card7 ==7) {	
-								view.updateInfobox("Your pawns moved 7 \nsteps successfully");
-							}else {
-								k2++;
-								card7++;
-							}	
-						}else if(c.getValue() ==10) {
-							view.showMessage("Select yes for 10 steps forward "
-									+ "\nSelect no for 1 step backwards.");
-							if(view.returnMessage() == 0) {
-								k2 = k2+c.getValue();
-							}else {
-								k2--;
-							}	
-						}else if(c.getValue() == 11) {
-							view.showMessage("Select yes for 11 steps forward "
-									+ "\nSelect no for switching pawns with enemy");
-							if(view.returnMessage() == 0) {
-								k2 = k2+c.getValue();
-							}else {
-								if(canBeSwitched(k0)) {
-									temp = k2;
-									k2 = k0;
-									k0 = temp;
-									view.updatePawn(k0, 0);
-									view.updateInfobox("Your pawns can be switched.");
-								}else {
-									view.updateInfobox("You pawn can't be switched.");
-								}
-							}
-						}else{
-							card7 = 0;
-							k2 = k2 + c.getValue();
-						}						
-					}
-					//Slide
-					if(k2 == 60) {
-						k2 = 3;
-						view.updateInfobox("Slide....");
-					}
-					if(k2 == 31 && c.getValue()!=4) {
-						k2=67;
-					}
-					if(k2 ==30) {
-						k2=29;
-					}
-					//if(k2 == 31 || k2 ==30) k2 = 67;
-					
-					if(k2>-1)view.updatePawn(k2, 2); //update pawn
-					
-					//Check if there is a winner.
-					if((k2 == 73 && k3==72) ||(k2==72 && k3==73)) {
-						view.getInfobox().setBackground(Color.yellow);
-						view.getPawn0().setEnabled(false);
-						view.getPawn1().setEnabled(false);
-						view.getPawn2().setEnabled(false);
-						view.getPawn3().setEnabled(false);
-						view.getCardButton().setEnabled(false);
-						view.updateInfobox("Congratulations!\nYELLOW pawns win!");
-					}
-				  //view.updateInfobox(Integer.toString(k2));
-					if(k2==8 || k2==23 || k2==53) {
-						k2 =k2+4;
-						view.updatePawn(k2,2);
-						view.updateInfobox("Slide....");
-					}
-					if(k2 ==15 || k2==45) {
-						k2 = k2+3;
-						view.updatePawn(k2,2);
-						view.updateInfobox("Slide....");
-					}
-					
-					//Pawns in the same position
-					if(k2 == k0 && k2!=-1 && k0!=-1) {
-						k0 = -1;
-						view.updatePawn(74,0);
-					}else if(k2 == k1 && k2!= -1 && k1!=-1) {
-						k1 = -1;
-						view.updatePawn(75,1);
-					}else if(k2 == k3 && k2!=-1 && k3!=-1) {
-						k3 =-1;
-						view.updatePawn(77,3);
-					}
-			} 
-		}else {
-			view.updateInfobox("It's Player's 1 turn.");
-		}
+		});
+		
+		view.getFoldbutton().addActionListener(new ActionListener(){			
+			public void actionPerformed(ActionEvent arg0) {
+				view.updateInfobox("Fold Button, next player.");
+			}
+		});	
 	}
-	});
-	view.getPawn3().addActionListener(new ActionListener(){		
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			if(turn == 2) {
-			if(canMove3() && canStart3()) {
-					if(k3 == -1) {
-						if(c.getValue() == 1 || (c.getValue() == 2)) 
-							k3 = 33; 
-						else if(card.getName() == "SorryCard") {
-							if(canBeSwitched(k1) && k3 ==-1) {
-								k3 = k1;
-								view.updateInfobox("Your pawns can be switched.");
-							}else {
-								view.updateInfobox("You pawn can't be switched.");
-							}
-						}
-					} 
-					else if(c.getValue() == 4) {
-						card7 = 0;
-						if(k3-4>=0){
-							k3 = k3-4;
-						}else {
-							k3 =59;
-						}
-					}else {
-						if(k3 + c.getValue()>31 && k3<31 && k3>21) {
-							k3 = 67;
-						}else if(k3+c.getValue() > 60 && k3 < 67){ 
-							k3 = 1;
-						}else if(c.getValue()==7) {
-							if(card7 ==7) {	
-								view.updateInfobox("Your pawns moved 7 \nsteps successfully");
-							}else {
-								k3++;
-								card7++;
-							}
-						}else if(c.getValue() ==10) {
-							view.showMessage("Select yes for 10 steps forward "
-									+ "\nSelect no for 1 step backwards.");
-							if(view.returnMessage() == 0) {
-								k3 = k3+c.getValue();
-							}else {
-								k3--;
-							}		
-						}else if(c.getValue() == 11) {
-							view.showMessage("Select yes for 11 steps forward "
-									+ "\nSelect no for switching pawns with enemy");
-							if(view.returnMessage() == 0) {
-								k3 = k3+c.getValue();
-							}else {
-								if(canBeSwitched(k1)) {
-									temp = k3;
-									k3 = k1;
-									k1 = k3;
-									view.updatePawn(k1, 1);
-									view.updateInfobox("Your pawns can be switched.");
-								}else {
-									view.updateInfobox("You pawn can't be switched.");
-								}
-							}
-						}else {
-							card7 = 0;
-							k3 = k3 + c.getValue();
-						}						
-					}
-					
-					if(k3 == 60) {
-						k3 = 3;
-						view.updateInfobox("Slide....");
-					}
-					if(k3 == 31 && c.getValue()!=4) {
-						k3=67;
-					}
-					if(k3 == 30) {
-						k3 =29;
-					}
-					
-					if(k3>-1)view.updatePawn(k3, 3); //update the view.
-					
-					//Check for a winner.
-					if((k2 == 73 && k3==72) ||(k2==72 && k3==73)) {
-						view.getInfobox().setBackground(Color.yellow);
-						view.getPawn0().setEnabled(false);
-						view.getPawn1().setEnabled(false);
-						view.getPawn2().setEnabled(false);
-						view.getPawn3().setEnabled(false);
-						view.getCardButton().setEnabled(false);
-						view.updateInfobox("Congratulations!\n\n\nYELLOW pawns win!");
-					}
-					//view.updateInfobox(Integer.toString(k3));
-					
-					//Slides..
-					if(k3==8 || k3==23 || k3==53) {
-						k3 =k3+4;
-						view.updatePawn(k3,3);
-						view.updateInfobox("Slide....");
-					}
-					if(k3==15 || k3==45) {
-						k3 = k3+3;
-						view.updatePawn(k3,3);
-						view.updateInfobox("Slide....");
-					}
-					
-					//Pawns in the same position
-					if(k3 == k0 && k3!=-1 && k0!=-1) {
-						k0 = -1;
-						view.updatePawn(74,0);
-					}else if(k3 == k1 && k3!=-1 && k1!=-1) {
-						k1 = -1;
-						view.updatePawn(75,1);
-					}else if(k3 == k2 && k3!=-1 && k2!=-1) {
-						k2 = -1;
-						view.updatePawn(76,2);
-					}
-			}	
-		}else {
-			view.updateInfobox("It's Player's 1 turn.");
-		}
-	}
-	});
-	
-	view.getFoldbutton().addActionListener(new ActionListener(){			
-		public void actionPerformed(ActionEvent arg0) {
-			view.updateInfobox("Fold Button, next player.");
-		}
-	});	
-}
-	
 	
 	public boolean canBeSwitched(int i) {
 		if(i <= -1)return false;
@@ -539,70 +538,62 @@ public class Controller {
 	 * Check if the player can start.
 	 */
 	public boolean canStart0() {
-		if(k0 == -1) { // an den exei arxisei
-			if(c.getValue() == 1 || c.getValue() == 2 || card.getName() =="SorryCard"){ //an mporei arxizei
+		if(k0 == -1) { // check if player has start
+			if(c.getValue() == 1 || c.getValue() == 2 || card.getName() =="SorryCard"){ //if pawn can start
 				return true;
 			}else {
 				view.updateInfobox("You can't move from start \nposition with this card."
 						+ "\nPlease select fold.");
-				return false; //allios den arxizei
+				return false; //else it doesn't start
 			}	
 		}else {
-			return true; //an exei arxisei tote panta mporei na arxisei (giati sinexizei)
+			return true;
 		}
 	}	
-	/**
-	 * 
-	 */
+
+		
 	public boolean canStart1() {
-		if(k1 == -1) { // an den exei arxisei
-			if(c.getValue() == 1 || c.getValue() == 2 || card.getName() =="SorryCard"){ //an mporei arxizei
+		if(k1 == -1) {
+			if(c.getValue() == 1 || c.getValue() == 2 || card.getName() =="SorryCard"){
 				return true;
 			}else {
 				view.updateInfobox("You can't move from start \nposition with this card."
 						+ "\nPlease select fold.");
-				return false; //allios den arxizei
+				return false; 
 			}	
 		}else {
-			return true; //an exei arxisei tote panta mporei na arxisei (giati sinexizei)
+			return true;
 		}
 	}
-	/**
-	 * 
-	 */
+	
 	public boolean canStart2() {
-		if(k2 == -1) { // an den exei arxisei
-			if(c.getValue() == 1 || c.getValue() == 2 || card.getName() =="SorryCard"){ //an mporei arxizei
+		if(k2 == -1) { 
+			if(c.getValue() == 1 || c.getValue() == 2 || card.getName() =="SorryCard"){
 				return true;
 			}else {
 				view.updateInfobox("You can't move from start \nposition with this card."
 						+ "\nPlease select fold.");
-				return false; //allios den arxizei
+				return false;
 			}	
 		}else {
-			return true; //an exei arxisei tote panta mporei na arxisei (giati sinexizei)
+			return true;
 		}
 	}
-	/**
-	 * 
-	 */
+
 	public boolean canStart3() {
-		if(k3 == -1) { // an den exei arxisei
-			if(c.getValue() == 1 || c.getValue() == 2 || card.getName() =="SorryCard"){ //an mporei arxizei
+		if(k3 == -1) {
+			if(c.getValue() == 1 || c.getValue() == 2 || card.getName() =="SorryCard"){
 				return true;
 			}else {
 				view.updateInfobox("You can't move from start \nposition with this card."
 						+ "\nPlease select fold.");
-				return false; //allios den arxizei
+				return false;
 			}	
 		}else {
-			return true; //an exei arxisei tote panta mporei na arxisei (giati sinexizei)
+			return true;
 		}
 	}
-	/**
-	 * 
-	 * @return
-	 */
+
 	public boolean canMove0() {
 		if(card.getName() != "SorryCard") {
 			if(k0+c.getValue() > 66){
@@ -612,10 +603,7 @@ public class Controller {
 		}
 		return true;
 	}
-	/**
-	 * 
-	 * @return
-	 */
+
 	public boolean canMove1() {
 		//if(card.getName() != "SorryCard") {
 			if(k1+c.getValue() > 66) {
@@ -625,10 +613,7 @@ public class Controller {
 		//}
 		return true;
 	}
-	/**
-	 * 
-	 * @return
-	 */
+
 	public boolean canMove2() {
 		if(card.getName() != "SorryCard") {
 			if(k2+c.getValue()>=74) {
@@ -638,10 +623,7 @@ public class Controller {
 		}
 		return true;
 	}
-	/**
-	 * 
-	 * @return
-	 */
+
 	public boolean canMove3() {
 		if(card.getName() != "SorryCard") {
 			if(k3+c.getValue()>=74) {
@@ -663,7 +645,7 @@ public class Controller {
 		player2 =  new Player(Color.yellow, "Player2", pawns[2], pawns[3]);
 	}
 	/**
-	 * Transformer , Initalize all the squares.
+	 * Transformer , Initialize all the squares.
 	 */
 	public void initSquares() {
 		for(int i  = 0; i < 78;i++) {	
@@ -696,7 +678,7 @@ public class Controller {
 	 */
 	public void removeAndReplaceCard(int positionOfCard) {
 		if(deck.getGameCards().isEmpty()) {
-			deck.initCards(); //suffle the cards again.
+			deck.initCards(); //shuffle  the cards again.
 		}else {
 			deck.getGameCards().remove(positionOfCard);
 			

@@ -56,11 +56,6 @@ public class Deck {
 			gameCards.add(new NumberElevenCard("NumberElevenCard", "images/cards/card11.png"));
 			gameCards.add(new NumberTwelveCard("NumberTwelveCard", "images/cards/card12.png"));
 			gameCards.add(new SorryCard("SorryCard", "images/cards/cardSorry.png"));
-			//Add the simple cards.
-			//gameCards.add(new SimpleNumberCard("NumberThreeCard", SimpleNumberCard.CheckSimpleCard.THREE, "images/cards/card3.png"));
-			//gameCards.add(new SimpleNumberCard("NumberFiveCard", SimpleNumberCard.CheckSimpleCard.FIVE, "images/cards/card5.png"));
-			//gameCards.add(new SimpleNumberCard("NumberEightCard", SimpleNumberCard.CheckSimpleCard.EIGHT, "images/cards/card8.png "));
-			//gameCards.add(new SimpleNumberCard("NumberTwelveCard", SimpleNumberCard.CheckSimpleCard.TWELVE, "images/cards/card12.png"));	
 		}
 		Collections.shuffle(gameCards); //Suffle the list of cards.
 		setGameCards(gameCards);
